@@ -1,0 +1,80 @@
+Trabajar con botones, eventos y cambios de estado.
+Pantalla con un Text("⚪") grande.
+Botón “Cambiar color”.
+Cada vez que lo pulsen cambia el emoji: 🔴🟡🟢
+
+
+package com.example.repaso
+
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.repaso.ui.theme.RepasoTheme
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            RepasoTheme {
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    ColorChangerScreen(modifier = Modifier.padding(innerPadding))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ColorChangerScreen(modifier: Modifier = Modifier) {
+    // Lista de emojis
+    val colores = listOf("⚪", "🔴", "🟡", "🟢")
+
+    // Estado que guarda el índice actual
+    var indice by remember { mutableStateOf(0) }
+
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        // Emoji grande
+        Text(
+            text = colores[indice],
+            fontSize = 96.sp,
+            textAlign = TextAlign.Center
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Botón para cambiar color
+        Button(onClick = {
+            // Cambia al siguiente índice y vuelve a 0 si es el final
+            indice = (indice + 1) % colores.size
+        }) {
+            Text(text = "Cambiar color")
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ColorChangerPreview() {
+    RepasoTheme {
+        ColorChangerScreen()
+    }
+}
