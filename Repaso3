@@ -1,0 +1,93 @@
+Repasar onCreate, ciclo de vida y estado.
+Muestra un emoji “📦”.
+Cada toque suma 1.
+Al llegar a 5 taps, el emoji cambia a “🎁” y aparece texto “¡Sorpresa!”.
+VED COMO UTILIZAR  PARA no perderlo al girar con rememberSaveable
+QUE NO SE RESETEE EL CONTADOR AL GIRAR EL DISPOSITIVO
+
+
+package com.example.repaso
+
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Text
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.repaso.ui.theme.RepasoTheme
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            RepasoTheme {
+                BoxWithEmoji()
+            }
+        }
+    }
+}
+
+@Composable
+fun BoxWithEmoji() {
+    // Estado del contador que **sobrevive a rotaciones**
+    var taps by rememberSaveable { mutableStateOf(0) }
+
+    // Determinar qué emoji mostrar
+    val emoji = if (taps >= 5) "🎁" else "📦"
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+            .clickable {
+                taps += 1
+            },
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        // Emoji grande
+        Text(
+            text = emoji,
+            fontSize = 96.sp,
+            textAlign = TextAlign.Center
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Texto sorpresa al llegar a 5 taps
+        if (taps >= 5) {
+            Text(
+                text = "¡Sorpresa!",
+                fontSize = 24.sp,
+                textAlign = TextAlign.Center
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Contador opcional para depuración
+        Text(
+            text = "Taps: $taps",
+            fontSize = 18.sp,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun BoxWithEmojiPreview() {
+    RepasoTheme {
+        BoxWithEmoji()
+    }
+}
