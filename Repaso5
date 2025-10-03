@@ -1,0 +1,85 @@
+Pantalla con dos botones (+ y –) y un número.
+Suma o resta al pulsar.
+Reto extra: añadir botón “Reset”.
+
+
+
+package com.example.repaso
+
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.repaso.ui.theme.RepasoTheme
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            RepasoTheme {
+                PantallaContador()
+            }
+        }
+    }
+}
+
+@Composable
+fun PantallaContador() {
+    // Estado del contador (se guarda al rotar)
+    var contador by rememberSaveable { mutableStateOf(0) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        // Número grande
+        Text(
+            text = "$contador",
+            fontSize = 48.sp
+        )
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        // Fila con botones + y -
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Button(onClick = { contador-- }) {
+                Text("–", fontSize = 24.sp)
+            }
+            Button(onClick = { contador++ }) {
+                Text("+", fontSize = 24.sp)
+            }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Botón reset
+        Button(onClick = { contador = 0 }) {
+            Text("Reset", fontSize = 18.sp)
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewPantallaContador() {
+    RepasoTheme {
+        PantallaContador()
+    }
+}
