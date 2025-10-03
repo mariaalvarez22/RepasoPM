@@ -1,0 +1,84 @@
+Pantalla 1: botón “Abrir mensaje”.
+Pantalla 2: muestra un Text("Lo que os de la gana") y un botón “Volver”.
+
+
+
+
+package com.example.repaso
+
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.repaso.ui.theme.RepasoTheme
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            RepasoTheme {
+                AppPantallas()
+            }
+        }
+    }
+}
+
+@Composable
+fun AppPantallas() {
+    // Estado que indica en qué pantalla estamos
+    var mostrarPantalla1 by rememberSaveable { mutableStateOf(true) }
+
+    if (mostrarPantalla1) {
+        Pantalla1(onAbrirMensaje = { mostrarPantalla1 = false })
+    } else {
+        Pantalla2(onVolver = { mostrarPantalla1 = true })
+    }
+}
+
+@Composable
+fun Pantalla1(onAbrirMensaje: () -> Unit) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Button(onClick = onAbrirMensaje) {
+            Text("Clica aquí para abrir el mensaje", fontSize = 20.sp)
+        }
+    }
+}
+
+@Composable
+fun Pantalla2(onVolver: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text("Buenos dias por la mañanita", fontSize = 24.sp)
+        Spacer(modifier = Modifier.height(20.dp))
+        Button(onClick = onVolver) {
+            Text("Volver", fontSize = 18.sp)
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewPantallas() {
+    RepasoTheme {
+        AppPantallas()
+    }
+}
