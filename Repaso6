@@ -1,0 +1,94 @@
+
+Pantalla con un Text("Un icono, emoji, el que querais. Imagen, lo que os guste") que cambia de posición en cada toque (arriba, abajo, izquierda, derecha).
+Añadir un contador de taps.
+Si superan 10 taps → muestra “¡Ganaste!”.
+
+
+
+package com.example.repaso
+
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Text
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.repaso.ui.theme.RepasoTheme
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            RepasoTheme {
+                PantallaJuego()
+            }
+        }
+    }
+}
+
+@Composable
+fun PantallaJuego() {
+    // Contador de taps
+    var taps by rememberSaveable { mutableStateOf(0) }
+
+    // Posición (0 = centro, 1 = arriba, 2 = derecha, 3 = abajo, 4 = izquierda)
+    var posicion by rememberSaveable { mutableStateOf(0) }
+
+    // Ciclo de posiciones
+    fun siguientePosicion() {
+        posicion = (posicion + 1) % 4
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .clickable {
+                taps++
+                siguientePosicion()
+            }
+            .padding(16.dp)
+    ) {
+        // Emoji que cambia de posición
+        val emoji = "😎"
+
+        when (posicion) {
+            0 -> Text(emoji, fontSize = 64.sp, modifier = Modifier.align(Alignment.TopCenter))
+            1 -> Text(emoji, fontSize = 64.sp, modifier = Modifier.align(Alignment.CenterEnd))
+            2 -> Text(emoji, fontSize = 64.sp, modifier = Modifier.align(Alignment.BottomCenter))
+            3 -> Text(emoji, fontSize = 64.sp, modifier = Modifier.align(Alignment.CenterStart))
+        }
+
+        // Contador de taps abajo centrado
+        Text(
+            text = "Taps: $taps",
+            fontSize = 20.sp,
+            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 50.dp)
+        )
+
+        // Mensaje de victoria
+        if (taps > 10) {
+            Text(
+                text = "¡Ganaste!",
+                fontSize = 28.sp,
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewPantallaJuego() {
+    RepasoTheme {
+        PantallaJuego()
+    }
+}
